@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>☎ Алло! Дисковий телефон</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@400;700&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; touch-action:none; }
+
+body {
+  background: #160d05;
+  background-image:
+    radial-gradient(ellipse 60% 80% at 15% 50%, #2a1608 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 85% 50%, #1c1006 0%, transparent 70%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Special Elite', cursive;
+  padding: 16px;
+  overflow-x: hidden;
+}
+
+.title {
+  font-family: 'Caveat', cursive;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ecdda0;
+  letter-spacing: 3px;
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(0,0,0,.9);
+  margin-bottom: 4px;
+}
+.subtitle {
+  text-align: center;
+  color: #7a5c38;
+  font-size: .72rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.table {
+  width: 100%;
+  max-width: 500px;
+  background: linear-gradient(160deg, #8a5c38 0%, #663618 50%, #512a10 100%);
+  border-radius: 14px 14px 0 0;
+  padding: 26px 24px 0;
+  box-shadow: 0 -4px 24px rgba(0,0,0,.7),
+              inset 0 2px 4px rgba(255,255,255,.08),
+              inset 0 -2px 8px rgba(0,0,0,.5);
+}
+.table-base {
+  width: 100%;
+  max-width: 500px;
+  height: 18px;
+  background: linear-gradient(180deg, #4a2a0e 0%, #3a1e08 100%);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 10px 32px rgba(0,0,0,.8);
+  margin-bottom: 18px;
+}
+
+.phone {
+  background: linear-gradient(140deg, #f6edcf 0%, #eadda8 35%, #ddd098 70%, #cec082 100%);
+  border-radius: 14px 14px 10px 10px;
+  padding: 18px 20px 16px;
+  position: relative;
+  box-shadow: 0 6px 28px rgba(0,0,0,.55),
+              inset 0 1px 3px rgba(255,255,255,.55),
+              inset 0 -2px 5px rgba(0,0,0,.25);
+}
+.phone::after {
+  content:'';
+  position:absolute; inset:0;
+  border-radius: 14px 14px 10px 10px;
+  background: linear-gradient(135deg, rgba(255,255,255,.14) 0%, transparent 55%);
+  pointer-events:none;
+}
+
+.handset {
+  position: absolute;
+  top: -18px; left: 18px; right: 18px;
+  height: 50px;
+  background: linear-gradient(180deg, #f0e5c5 0%, #ddd098 55%, #c8a860 100%);
+  border-radius: 32px;
+  box-shadow: 0 5px 14px rgba(0,0,0,.45),
+              inset 0 1px 3px rgba(255,255,255,.5),
+              inset 0 -1px 4px rgba(0,0,0,.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 22px;
+  z-index: 10;
+}
+.handset.ringing { animation: ring .12s ease-in-out infinite; }
+@keyframes ring {
+  0%,100%{ transform:translateX(0) rotate(0deg); }
+  25%    { transform:translateX(-3px) rotate(-.8deg); }
+  75%    { transform:translateX(3px) rotate(.8deg); }
+}
+.speaker {
+  width:38px; height:26px; background:#c4a465; border-radius:5px;
+  display:grid; grid-template:repeat(3,1fr)/repeat(3,1fr); gap:3px; padding:4px;
+}
+.sd { background:#8a6020; border-radius:50%; }
+
+.phone-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 46px;
+}
+
+.side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.display {
+  background: linear-gradient(135deg, #180e04, #0e0a02);
+  border: 2px solid #5a3818;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,.9), 0 1px 2px rgba(255,255,255,.07);
+}
+.display-lbl {
+  color: #5a3c18; font-size:.6rem; letter-spacing:2.5px; text-transform:uppercase;
+  display:flex; align-items:center; gap:6px; margin-bottom:4px;
+}
+.sled {
+  width:7px; height:7px; border-radius:50%; background:#1e1008; transition:all .3s;
+}
+.sled.on {
+  background:#f0c030;
+  box-shadow: 0 0 6px #f0c030, 0 0 14px rgba(240,192,48,.45);
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.display-num {
+  color:#f0c030; font-size:1.7rem; letter-spacing:9px; min-height:2rem;
+  text-shadow: 0 0 10px rgba(240,192,48,.5);
+}
+.display-num.pulse { animation: gpulse .45s ease; }
+@keyframes gpulse {
+  0%  { text-shadow: 0 0 10px rgba(240,192,48,.5); }
+  50% { text-shadow: 0 0 22px #f0c030, 0 0 44px rgba(240,192,48,.55); }
+  100%{ text-shadow: 0 0 10px rgba(240,192,48,.5); }
+}
+.btns { display:flex; gap:8px; }
+.btn {
+  flex:1; padding:9px 4px; border:none; border-radius:7px;
+  font-family:'Special Elite',cursive; font-size:.72rem;
+  cursor:pointer; letter-spacing:1px; text-transform:uppercase; transition:all .15s;
+}
+.btn-call {
+  background:linear-gradient(135deg,#2a5a2c,#1c3c1e); color:#88d088;
+  box-shadow:0 3px 8px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.1);
+  border-bottom:3px solid #0e1e10;
+}
+.btn-call:hover  { filter:brightness(1.2); transform:translateY(-1px); }
+.btn-call:active { transform:translateY(1px); border-bottom-width:1px; }
+.btn-clr {
+  background:linear-gradient(135deg,#5a1818,#3c1010); color:#e06060;
+  box-shadow:0 3px 8px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.1);
+  border-bottom:3px solid #1e0808;
+}
+.btn-clr:hover  { filter:brightness(1.2); transform:translateY(-1px); }
+.btn-clr:active { transform:translateY(1px); border-bottom-width:1px; }
+.hint { color:#6a4820; font-family:'Caveat',cursive; font-size:.9rem; text-align:center; }
+
+/* ── DIAL ── */
+.dial-wrap {
+  position:relative; width:200px; height:200px; flex-shrink:0;
+  cursor:grab; user-select:none;
+}
+.dial-wrap:active { cursor:grabbing; }
+.dial-plate {
+  position:absolute; inset:0; border-radius:50%;
+  background:linear-gradient(135deg,#d0b870 0%,#c0a050 60%,#a88030 100%);
+  box-shadow:0 4px 18px rgba(0,0,0,.5),
+             inset 0 2px 5px rgba(255,255,255,.28),
+             inset 0 -2px 7px rgba(0,0,0,.35);
+}
+#dialSvg {
+  position:absolute; inset:0; width:200px; height:200px;
+  will-change:transform; transform-origin:center;
+}
+.finger-stop {
+  position:absolute; top:50%; right:-9px; transform:translateY(-50%);
+  width:17px; height:17px; border-radius:50%;
+  background:linear-gradient(135deg,#8a5820,#5a3010);
+  box-shadow:0 2px 5px rgba(0,0,0,.5); z-index:20; pointer-events:none;
+}
+.wire { height:28px; display:flex; padding-left:24px; }
+.wire svg { width:80px; height:28px; }
+
+/* ── RESPONSE ── */
+.response-area { width:100%; max-width:500px; min-height:70px; margin-top:4px; }
+.bubble {
+  background:rgba(245,236,208,.96); border-radius:12px; padding:14px 18px;
+  color:#2c1a0e; font-family:'Caveat',cursive; font-size:1.12rem; line-height:1.55;
+  box-shadow:0 4px 20px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.8);
+  display:none; animation:bIn .38s ease;
+}
+.bubble.show { display:block; }
+@keyframes bIn { from{opacity:0;transform:translateY(8px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+.bubble-hdr { color:#6b4c2a; font-size:.68rem; letter-spacing:2px; text-transform:uppercase; font-family:'Special Elite',cursive; margin-bottom:5px; }
+
+/* ── PHONE LIST ── */
+.list-btn {
+  width:100%; max-width:500px; background:none; border:1px solid #5a3818;
+  color:#8a6030; font-family:'Special Elite',cursive; font-size:.75rem;
+  letter-spacing:2px; text-transform:uppercase; padding:8px 16px; border-radius:7px;
+  cursor:pointer; margin-top:10px; transition:all .2s;
+}
+.list-btn:hover { background:rgba(90,56,24,.3); color:#d0a060; }
+.phone-list {
+  display:none; background:rgba(18,10,3,.92); border:1px solid #3e2810;
+  border-radius:9px; margin-top:7px; width:100%; max-width:500px; overflow:hidden;
+}
+.phone-list.open { display:block; animation:bIn .28s ease; }
+.list-hdr { color:#7a4e20; font-size:.65rem; letter-spacing:3px; text-transform:uppercase; padding:9px 14px 6px; border-bottom:1px solid #2e1a08; }
+.entry {
+  display:flex; align-items:center; gap:12px; padding:8px 14px;
+  border-bottom:1px solid rgba(46,26,8,.5); transition:background .14s;
+}
+.entry:last-child { border-bottom:none; }
+.entry.known { cursor:pointer; }
+.entry.known:hover { background:rgba(90,60,20,.35); }
+.entry .num { color:#f0c030; font-size:.95rem; min-width:28px; }
+.entry .dsc { color:#c8a060; font-family:'Caveat',cursive; font-size:1rem; }
+.entry .lck { color:#3a2010; margin-left:auto; font-size:.9rem; }
+.disc-bar { text-align:center; color:#5a3c18; font-size:.72rem; letter-spacing:2px; margin-top:8px; width:100%; max-width:500px; }
+.disc-bar span { color:#f0c030; text-shadow:0 0 8px rgba(240,192,48,.5); }
+</style>
+</head>
+<body>
+
+<p class="title">☎ Алло!</p>
+<p class="subtitle">Дисковий телефон · 1970-ті</p>
+
+<div class="table">
+  <div class="phone">
+
+    <div class="handset" id="handset">
+      <div class="speaker"><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div>
+      <div class="speaker"><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div>
+    </div>
+
+    <div class="phone-inner">
+
+      <div class="dial-wrap" id="dialWrap">
+        <div class="dial-plate"></div>
+        <svg id="dialSvg" viewBox="0 0 200 200">
+          <defs>
+            <radialGradient id="hg" cx="35%" cy="30%">
+              <stop offset="0%" stop-color="#6a4828"/>
+              <stop offset="100%" stop-color="#1e0e04"/>
+            </radialGradient>
+            <radialGradient id="cg" cx="40%" cy="35%">
+              <stop offset="0%" stop-color="#ecdda0"/>
+              <stop offset="100%" stop-color="#b89040"/>
+            </radialGradient>
+          </defs>
+          <g id="digitsG">
+            <!-- 10 holes: 1 at -54°, step +36° clockwise, radius 70 from center -->
+            <g data-d="1"  transform="translate(100,100) rotate(-54)  translate(0,-70) rotate(54)">  <circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">1</text></g>
+            <g data-d="2"  transform="translate(100,100) rotate(-18)  translate(0,-70) rotate(18)">  <circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">2</text></g>
+            <g data-d="3"  transform="translate(100,100) rotate(18)   translate(0,-70) rotate(-18)"> <circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">3</text></g>
+            <g data-d="4"  transform="translate(100,100) rotate(54)   translate(0,-70) rotate(-54)"> <circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">4</text></g>
+            <g data-d="5"  transform="translate(100,100) rotate(90)   translate(0,-70) rotate(-90)"> <circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">5</text></g>
+            <g data-d="6"  transform="translate(100,100) rotate(126)  translate(0,-70) rotate(-126)"><circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">6</text></g>
+            <g data-d="7"  transform="translate(100,100) rotate(162)  translate(0,-70) rotate(-162)"><circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">7</text></g>
+            <g data-d="8"  transform="translate(100,100) rotate(198)  translate(0,-70) rotate(-198)"><circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">8</text></g>
+            <g data-d="9"  transform="translate(100,100) rotate(234)  translate(0,-70) rotate(-234)"><circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">9</text></g>
+            <g data-d="0"  transform="translate(100,100) rotate(270)  translate(0,-70) rotate(-270)"><circle r="14" fill="url(#hg)" stroke="#1a0c04" stroke-width="1.2"/><text text-anchor="middle" dominant-baseline="central" fill="#f0e6c8" font-size="13" font-family="'Special Elite',cursive">0</text></g>
+          </g>
+          <circle cx="100" cy="100" r="30" fill="url(#cg)" stroke="#9a7030" stroke-width="1.5"/>
+          <circle cx="100" cy="100" r="5"  fill="#7a5020"/>
+        </svg>
+        <div class="finger-stop"></div>
+      </div>
+
+      <div class="side">
+        <div class="display">
+          <div class="display-lbl">Номер <div class="sled" id="sled"></div></div>
+          <div class="display-num" id="dispNum">_ _</div>
+        </div>
+        <div class="btns">
+          <button class="btn btn-call" id="callBtn">▶ Дзвонити</button>
+          <button class="btn btn-clr"  id="clrBtn">✕ Стерти</button>
+        </div>
+        <p class="hint">Крути диск пальцем ↻</p>
+      </div>
+    </div>
+
+    <div class="wire">
+      <svg viewBox="0 0 80 28" fill="none">
+        <path d="M10,4 Q20,26 30,14 Q40,2 50,18 Q60,30 70,10" stroke="#1a0c04" stroke-width="5" stroke-linecap="round"/>
+        <path d="M10,4 Q20,26 30,14 Q40,2 50,18 Q60,30 70,10" stroke="#2e1a08" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+<div class="table-base"></div>
+
+<div class="response-area">
+  <div class="bubble" id="bubble">
+    <div class="bubble-hdr">☎ Алло!</div>
+    <span id="bubbleText"></span>
+  </div>
+</div>
+
+<button class="list-btn" id="listBtn">📋 Довідник телефонів</button>
+<div class="phone-list" id="phoneList"></div>
+<p class="disc-bar">Відкрито: <span id="dCount">0</span> / <span id="dTotal">0</span></p>
+
+<script>
+/* ─── Phone book ─────────────────────────────────────────────────── */
+const PHONES = {
+  "01":{ icon:"👮", desc:"Поліція гумору",    txt:"Поліція гумору, слухаю! Хто тут сьогодні ходить без посмішки? Негайно усміхніться — це наказ!" },
+  "02":{ icon:"🚒", desc:"Пожежна",           txt:"Пожежна служба! У вас горить... бажання з'їсти щось смачне! Терміново йдіть на кухню!" },
+  "03":{ icon:"🏥", desc:"Швидка допомога",   txt:"Швидка допомога! Терміново прописуємо: теплий чай, улюблений фільм і відпочинок від усіх." },
+  "04":{ icon:"📖", desc:"Довідкова",          txt:"Довідкова служба. Сьогоднішня довідка: ви дуже гарна людина. Запишіть і не забувайте." },
+  "05":{ icon:"🌤", desc:"Погода",            txt:"Служба погоди! Сьогодні: вранці дощ із цукерок, вдень сонячно з котами, ввечері тепло і затишно." },
+  "06":{ icon:"🌲", desc:"Природа",           txt:"🎵 ...шум лісу... пташки співають... вітер у листі... десь вдалині дятел... тихо і добре... 🎵" },
+  "07":{ icon:"🛒", desc:"Магазин чудес",     txt:"Магазин чудес, добрий день! Сьогодні акція: безкоштовний гарний настрій при будь-якій покупці!" },
+  "08":{ icon:"🕰", desc:"Точний час",        txt:"Пікнуло... пікнуло... зараз точний час — час усміхнутися! Наступний сигнал — через хвилину." },
+  "09":{ icon:"💛", desc:"Лінія життя",       txt:"Ви подзвонили на Лінію Життя. Ми хочемо нагадати: ви важливі. Ви потрібні. Ви не дарма тут." },
+  "11":{ icon:"🐱", desc:"Котик",             txt:"Мяу! Мяу мяу! Мяу... *муркотить* ...мяу мяу мяу! Мяу. *кладе трубку*" },
+  "12":{ icon:"🎵", desc:"Мелодія",           txt:"🎵 Тара-ра-рам... тара-ра-рам... Та-та-та-та-та-таааам! 🎵 (Весела мелодія закінчилась. Гарного дня!)" },
+  "13":{ icon:"🎩", desc:"Загадка",           txt:"Добрий день! Загадка: вдень і вночі ходить, а нікуди не йде. Що це? ... Правильно! Це годинник." },
+  "14":{ icon:"🔐", desc:"Секретна лінія",   txt:"⚡ Секретна лінія активна. Ваша місія: сьогодні зробити комусь приємне. Удачі. Кінець зв'язку." },
+  "22":{ icon:"👵", desc:"Сусідка",          txt:"Алло! Алло! Це ви, Галю? Ні? Ой, вибачте! Ну, раз вже подзвонили — як справи?" },
+  "33":{ icon:"🐈", desc:"Кішка директора", txt:"Мурмурмурмур... *тривале муркотіння* ...мняв... *звук горщика* ...МЯУ! *кладе трубку*" },
+  "42":{ icon:"✨", desc:"Відповідь на все", txt:"Ви дозвонились до Відповіді на Головне Питання Всесвіту. Відповідь: сорок два. До побачення." },
+  "55":{ icon:"🍲", desc:"Рецепт борщу",    txt:"Кулінарна служба! Борщ: картопля, буряк, капуста, морква, цибуля, томат, часник. Варити з любов'ю!" },
+  "99":{ icon:"🌙", desc:"???",             txt:"...тихий шум... десь грає стара платівка... голос з минулого каже: все буде добре. Я обіцяю." },
+};
+
+/* ─── State ── */
+let dialedNumber = "";
+let discovered   = new Set();
+let busy         = false;
+
+/* ─── DOM ── */
+const dispNum  = document.getElementById('dispNum');
+const sled     = document.getElementById('sled');
+const handset  = document.getElementById('handset');
+const bubble   = document.getElementById('bubble');
+const bubbleTx = document.getElementById('bubbleText');
+const dialSvg  = document.getElementById('dialSvg');
+const dialWrap = document.getElementById('dialWrap');
+const dCount   = document.getElementById('dCount');
+const dTotal   = document.getElementById('dTotal');
+
+/* ─── Audio ── */
+function clickTick(f=440) {
+  try {
+    const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.frequency.value=f+Math.random()*80;
+    g.gain.setValueAtTime(.15,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.1);
+    o.start();o.stop(c.currentTime+.1);
+  } catch(e){}
+}
+function springSound() {
+  try {
+    const c=new (window.AudioContext||window.webkitAudioContext)();
+    for(let i=0;i<5;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=580-i*45;const t=c.currentTime+i*.035;g.gain.setValueAtTime(.09,t);g.gain.exponentialRampToValueAtTime(.001,t+.07);o.start(t);o.stop(t+.07);}
+  } catch(e){}
+}
+function playRing() {
+  try {
+    const c=new (window.AudioContext||window.webkitAudioContext)();
+    const beep=(t,f,d)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d);};
+    beep(c.currentTime,.0,480,.28);beep(c.currentTime,.35,480,.28);
+    beep(c.currentTime,.9,480,.28);beep(c.currentTime,1.25,480,.28);
+    beep(c.currentTime,1.8,480,.28);
+  } catch(e){}
+}
+
+/* ─── Display ── */
+function updateDisp() {
+  dispNum.textContent = dialedNumber.padEnd(2,'_').split('').join(' ');
+  dispNum.classList.remove('pulse');
+  void dispNum.offsetWidth;
+  dispNum.classList.add('pulse');
+}
+
+function addDigit(d) {
+  if (dialedNumber.length>=2||busy) return;
+  dialedNumber+=d;
+  updateDisp();
+}
+
+document.getElementById('clrBtn').onclick=()=>{
+  if(busy)return;
+  dialedNumber=""; updateDisp();
+  bubble.classList.remove('show');
+  sled.classList.remove('on');
+};
+
+document.getElementById('callBtn').onclick=makeCall;
+function makeCall(){
+  if(busy)return;
+  if(dialedNumber.length<2){showBubble("Наберіть двозначний номер спочатку 😊");return;}
+  busy=true; sled.classList.add('on'); handset.classList.add('ringing');
+  playRing();
+  setTimeout(()=>{
+    handset.classList.remove('ringing'); sled.classList.remove('on'); busy=false;
+    const rec=PHONES[dialedNumber];
+    if(rec){discovered.add(dialedNumber);updateDiscovered();renderList();showBubble(`${rec.icon} ${rec.txt}`);}
+    else {
+      const u=["Тут нікого немає... або є? 🌫","Зайнято. Спробуйте пізніше.","Хтось підняв трубку і поклав. Дивно.","...гудки... тиша... 📻","Цей номер мовчить."];
+      showBubble(u[Math.floor(Math.random()*u.length)]);
+    }
+  },2400);
+}
+
+function showBubble(txt){
+  bubble.classList.remove('show'); void bubble.offsetWidth;
+  bubbleTx.textContent=txt; bubble.classList.add('show');
+}
+
+function updateDiscovered(){dCount.textContent=discovered.size;dTotal.textContent=Object.keys(PHONES).length;}
+
+document.getElementById('listBtn').onclick=()=>{
+  const el=document.getElementById('phoneList');
+  el.classList.toggle('open');
+  if(el.classList.contains('open'))renderList();
+};
+function renderList(){
+  const el=document.getElementById('phoneList');
+  el.innerHTML='<div class="list-hdr">Довідник телефонів</div>';
+  Object.entries(PHONES).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([num,rec])=>{
+    const known=discovered.has(num);
+    const div=document.createElement('div');
+    div.className='entry'+(known?' known':'');
+    div.innerHTML=known
+      ?`<span class="num">${num}</span><span class="dsc">${rec.icon} ${rec.desc}</span>`
+      :`<span class="num">${num}</span><span class="dsc" style="color:#2a1808">● ● ●</span><span class="lck">🔒</span>`;
+    if(known)div.onclick=()=>{dialedNumber=num;updateDisp();el.classList.remove('open');setTimeout(makeCall,300);};
+    el.appendChild(div);
+  });
+}
+
+updateDisp(); updateDiscovered();
+
+/* ════════════════════════════════════════════════════════════
+   ROTARY DIAL MECHANIC
+   ════════════════════════════════════════════════════════════
+   Real rotary phone logic:
+   1. User presses finger into a digit hole
+   2. Drags CLOCKWISE until hitting the finger stop (right side)
+   3. Releases — dial springs back counter-clockwise
+   4. Digit is registered on release if rotated far enough
+
+   Digit hole positions (degrees from top, clockwise):
+     1 = -54°   2 = -18°   3 = 18°   4 = 54°   5 = 90°
+     6 = 126°   7 = 162°   8 = 198°  9 = 234°   0 = 270°
+   Finger stop is at 90° (3-o'clock position).
+   ════════════════════════════════════════════════════════════ */
+(function(){
+  // Where each digit's hole rests (degrees, clockwise from 12-o'clock)
+  const HOLE_ANGLE = {'1':-54,'2':-18,'3':18,'4':54,'5':90,'6':126,'7':162,'8':198,'9':234,'0':270};
+  // normalise to 0-360
+  const norm = a => ((a%360)+360)%360;
+
+  let dragging=false, activeDigit=null, startPointerAngle=0, curRotation=0, lastTickAngle=0;
+
+  function svgCenter(){
+    const r=dialWrap.getBoundingClientRect();
+    return {cx:r.left+r.width/2, cy:r.top+r.height/2};
+  }
+
+  function ptrAngle(e){
+    const {cx,cy}=svgCenter();
+    const px=e.touches?e.touches[0].clientX:e.clientX;
+    const py=e.touches?e.touches[0].clientY:e.clientY;
+    // Returns angle in degrees where 0=right(3-o'clock), goes CCW in math
+    // We want 0=top, clockwise positive:
+    const rad=Math.atan2(py-cy, px-cx);
+    return rad*180/Math.PI + 90; // rotate frame so 0=top
+  }
+
+  function holeWorldPos(digit, extraRot){
+    // Where the hole is on screen given current dial rotation
+    const baseAngle = HOLE_ANGLE[digit] + (extraRot||0);
+    const {cx,cy}=svgCenter();
+    const r=70 * (dialWrap.getBoundingClientRect().width/200); // scale factor
+    const rad=baseAngle*Math.PI/180;
+    return {x:cx+Math.sin(rad)*r, y:cy-Math.cos(rad)*r};
+  }
+
+  function findHole(e){
+    const px=e.touches?e.touches[0].clientX:e.clientX;
+    const py=e.touches?e.touches[0].clientY:e.clientY;
+    const scale=dialWrap.getBoundingClientRect().width/200;
+    let best=null, bestD=Infinity;
+    for(const [d,_] of Object.entries(HOLE_ANGLE)){
+      const {x,y}=holeWorldPos(d, curRotation);
+      const dist=Math.hypot(px-x,py-y);
+      if(dist<bestD){bestD=dist;best=d;}
+    }
+    return bestD < 26*scale ? best : null;
+  }
+
+  function setRot(deg){
+    dialSvg.style.transform=`rotate(${deg}deg)`;
+    curRotation=deg;
+  }
+
+  function onDown(e){
+    if(busy)return;
+    e.preventDefault();
+    const hole=findHole(e);
+    if(!hole)return;
+    dragging=true; activeDigit=hole;
+    startPointerAngle=ptrAngle(e);
+    lastTickAngle=startPointerAngle;
+    if(e.pointerId!=null)dialWrap.setPointerCapture&&dialWrap.setPointerCapture(e.pointerId);
+  }
+
+  function onMove(e){
+    if(!dragging)return;
+    e.preventDefault();
+    let delta=ptrAngle(e)-startPointerAngle;
+    // Unwrap
+    if(delta>180)delta-=360;
+    if(delta<-180)delta+=360;
+    // Only CW (positive) rotation, capped at max travel to stop
+    const holeRest=HOLE_ANGLE[activeDigit];
+    // finger stop is at 90°. Max CW rotation = distance from hole to stop.
+    const maxRot=norm(90-holeRest);
+    const rot=Math.max(0,Math.min(delta,maxRot));
+    setRot(rot);
+    // tick every ~12°
+    const cur=ptrAngle(e);
+    if(Math.abs(cur-lastTickAngle)>12){lastTickAngle=cur;clickTick(300+Math.random()*120);}
+  }
+
+  function onUp(e){
+    if(!dragging)return;
+    e.preventDefault();
+    dragging=false;
+    const holeRest=HOLE_ANGLE[activeDigit];
+    const maxRot=norm(90-holeRest);
+    // Register if rotated >72% of max
+    if(curRotation>=maxRot*0.72){addDigit(activeDigit);}
+    springSound();
+    // Animate spring back
+    const from=curRotation;
+    const t0=performance.now();
+    const dur=Math.max(160, from*2.2);
+    function frame(now){
+      const p=Math.min(1,(now-t0)/dur);
+      const ease=1-Math.pow(1-p,3);
+      setRot(from*(1-ease));
+      if(p<1)requestAnimationFrame(frame); else setRot(0);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  dialWrap.addEventListener('pointerdown', onDown,{passive:false});
+  window.addEventListener('pointermove',   onMove,{passive:false});
+  window.addEventListener('pointerup',     onUp,  {passive:false});
+  dialWrap.addEventListener('touchstart',  onDown,{passive:false});
+  window.addEventListener('touchmove',     onMove,{passive:false});
+  window.addEventListener('touchend',      onUp,  {passive:false});
+})();
+</script>
+</body>
+</html>
